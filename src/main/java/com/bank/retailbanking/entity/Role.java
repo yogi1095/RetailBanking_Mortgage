@@ -5,10 +5,9 @@ import javax.persistence.Id;
 
 import lombok.Getter;
 import lombok.Setter;
-
+@Entity
 @Setter
 @Getter
-@Entity
 public class Role {
 	@Id
 	private Integer roleId;

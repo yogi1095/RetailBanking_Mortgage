@@ -27,10 +27,11 @@ public class Constant {
 	public static final String ACCOUNT_STATUS_ACTIVE = "Active";
 	public static final String ACCOUNT_TYPE_SAVINGS = "savings";
 	public static final String USER_NOT_FOUND = "user not found";
+
 	public static final String ACCOUNT_TYPE = "Mortgage";
-	/**
-	 * Status codes.
-	 */
+	public static final String MORTGAGE = "Mortgage";
+	public static final String MORTGAGE_ACCOUNT_NOT_FOUND = "Mortgage account not found";
+
 	public static final Integer NOT_ACCEPTABLE = 406;
 	public static final Integer USER_NOT_ACCEPTABLE = 407;
 	public static final Integer EMAIL_NOT_ACCEPTABLE = 408;
