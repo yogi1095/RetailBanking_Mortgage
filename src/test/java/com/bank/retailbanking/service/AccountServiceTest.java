@@ -1,5 +1,6 @@
 package com.bank.retailbanking.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import com.bank.retailbanking.dto.AccountSummaryResponseDto;
 import com.bank.retailbanking.entity.Account;
 import com.bank.retailbanking.entity.Customer;
 import com.bank.retailbanking.entity.Transaction;
+import com.bank.retailbanking.exception.MortgageNotFoundException;
 import com.bank.retailbanking.repository.AccountRepository;
 import com.bank.retailbanking.repository.CustomerRepository;
 import com.bank.retailbanking.repository.TransactionRepository;
@@ -102,36 +104,37 @@ public class AccountServiceTest {
 	@Test
 	public void testAccountSummary() {
 		Mockito.when(customerRepository.findById(5)).thenReturn(Optional.of(customer));
-		Mockito.when(accountRepository.findByCustomer(Optional.of(customer))).thenReturn(Optional.of(account));
-		Mockito.when(transactionRepository.findTop5ByAccountOrderByTransactionIdDesc(Optional.of(account)))
+		Mockito.when(accountRepository.findByCustomer(customer)).thenReturn(new ArrayList<Account>());
+		Mockito.when(transactionRepository.findTop5ByAccountOrderByTransactionIdDesc(account))
 				.thenReturn(transactionsList);
 
-		AccountSummaryResponseDto accountSummaryResponseDto = accountServiceImpl.accountSummary(5);
+		List<Account> accountSummaryResponseDto = accountServiceImpl.getAccounts(5);
 		Assert.assertNotNull(accountSummaryResponseDto);
 	}
 	
-	
-	
-
-	/**
-	 * This method is used to test accountSummary in negative scenario and five
-	 * transactions.
-	 * 
-	 * @pathVariable customerId.This is the customerId of the customer.
-	 * @return This has the return type of AccountSummaryResponseDto.This returns
-	 *         accountSummary and String of result along with the statusCode.
-	 */
-
-	@Test
-	public void testAccountSummaryNegative() {
-
-		Mockito.when(customerRepository.findById(5)).thenReturn(Optional.of(customer));
-		Mockito.when(accountRepository.findByCustomer(Optional.of(customer))).thenReturn(Optional.of(account));
-		Mockito.when(transactionRepository.findTop5ByAccountOrderByTransactionIdDesc(Optional.of(account)))
-				.thenReturn(transactionsList);
-
-		AccountSummaryResponseDto accountSummaryResponseDto = accountServiceImpl.accountSummary(6);
-		Assert.assertNull(accountSummaryResponseDto);
+	@Test(expected = MortgageNotFoundException.class)
+	public void testGetMortgageAccount() throws MortgageNotFoundException {
+		
+		customer = new Customer();
+		customer.setCustomerId(1);
+		customer.setAddress("Bng");
+		customer.setDateOfBirth(LocalDate.parse("2019-12-03"));
+		customer.setEmailId("yoga@gmail.com");
+		customer.setFirstName("yoga");
+		customer.setLastName("reddy");
+		customer.setMobileNo(9491777925L);
+		customer.setUserName("HI");
+		customer.setPassword("Hello");
+		
+		account = new Account();
+		account.setAccountNumber(60987651L);
+		account.setAccountStatus("open");
+		account.setAccountType(Constant.MORTGAGE);
+		account.setBalance((double) 3489);
+		account.setCustomer(customer);
+		Mockito.when(accountRepository.findByCustomerAndAccountType(customer,"Mortgage")).thenReturn(Optional.of(account));
+		Account account =accountServiceImpl.getMortgageAccount(1);
+		assertNotNull(account);
 	}
 
 }

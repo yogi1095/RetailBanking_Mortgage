@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.bank.retailbanking.constants.Constant;
 import com.bank.retailbanking.dto.AccountResponseDto;
@@ -20,30 +22,30 @@ import com.bank.retailbanking.dto.AccountSummaryResponseDto;
 import com.bank.retailbanking.dto.TransferAccountDto;
 import com.bank.retailbanking.entity.Account;
 import com.bank.retailbanking.entity.Customer;
+import com.bank.retailbanking.exception.MortgageNotFoundException;
 import com.bank.retailbanking.service.AccountService;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class AccountControllerTest {
-	
+
 	@InjectMocks
 	AccountController accountController;
-	
+
 	@Mock
 	AccountService accountService;
-	
-	
+
 	AccountSummaryResponseDto accountSummaryResponseDto = null;
+
 	@Before
-	public void setUp()
-	{
+	public void setUp() {
 		accountSummaryResponseDto = new AccountSummaryResponseDto();
 		accountSummaryResponseDto.setMessage(Constant.SUCCESS);
 		accountSummaryResponseDto.setStatusCode(Constant.ACCEPTED);
-		
+
 		Customer customer = new Customer();
 		customer.setCustomerId(1);
 	}
-	
+
 	@Test
 	public void testFindAllAccountNumbersPositive() {
 		Account account = new Account();
@@ -70,20 +72,24 @@ public class AccountControllerTest {
 	}
 
 	/**
-	* This method is used to orderProductsTest.
-	* @param orderRequestDto This is the parameters to add products method
-	* @return This returns orderResponseDto.
-	*/
+	 * This method is used to orderProductsTest.
+	 * 
+	 * @param orderRequestDto This is the parameters to add products method
+	 * @return This returns orderResponseDto.
+	 */
 	@Test
-	public void testAccountSummaryTest()
-	{
-		
-		Mockito.when(accountService.getAccounts(1)).thenReturn(accountSummaryResponseDto);
-		AccountSummaryResponseDto response = accountController.accountSummary(1);
-		Integer expected = Constant.ACCEPTED;
-		assertEquals(expected, response.getStatusCode());
+	public void testAccountSummaryTest() {
+
+		Mockito.when(accountService.getAccounts(1)).thenReturn(new ArrayList<>());
+		ResponseEntity<List<Account>> response = accountController.getAccounts(1);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 	
-	
+	@Test
+	public void testGetMortgageAccount() throws MortgageNotFoundException {
+		Mockito.when(accountService.getMortgageAccount(1)).thenReturn(new Account());
+		ResponseEntity<Account> actual = accountController.getMortgageAccount(1);
+		assertNotNull(actual);
+	}
 
 }

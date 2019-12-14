@@ -14,6 +14,7 @@ import com.bank.retailbanking.dto.AccountResponseDto;
 import com.bank.retailbanking.dto.TransferAccountDto;
 import com.bank.retailbanking.entity.Account;
 import com.bank.retailbanking.entity.Customer;
+import com.bank.retailbanking.exception.MortgageNotFoundException;
 import com.bank.retailbanking.repository.AccountRepository;
 import com.bank.retailbanking.repository.CustomerRepository;
 import com.bank.retailbanking.repository.TransactionRepository;
@@ -76,11 +77,11 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	/**
-	 * This API is used to get accountSummary which will find all the accountNumbers
+	 * This method is used to get accountSummary which will find all the accountNumbers
 	 * and five transactions.
 	 * 
-	 * @pathVariable customerId.This is the customerId of the customer.
-	 * @return This has the return type of AccountSummaryResponseDto.This returns
+	 * @param customerId.This is the customerId of the customer.
+	 * @return This has the return type of list of account.This returns
 	 *         accountSummary and String of result along with the statusCode.
 	 */
 	@Override
@@ -89,6 +90,26 @@ public class AccountServiceImpl implements AccountService {
 		Customer customer = new Customer();
 		customer.setCustomerId(customerId);
 		return accountRepository.findByCustomer(customer);
+	}
+
+	/**
+	 * This method is used to find mortgageAccount by the customerId
+	 * 
+	 * @pathVariable customerId.This is the customerId of the current customer.
+	 * @return This has the return type of Account.This returns
+	 *         MortgageAccount along
+	 *         with the statusCode.
+	 */
+	@Override
+	public Account getMortgageAccount(Integer customerId) throws MortgageNotFoundException {
+		Customer customer = new Customer();
+		customer.setCustomerId(customerId);
+		Optional<Account> account = accountRepository.findByCustomerAndAccountType(customer, Constant.MORTGAGE);
+		if(!account.isPresent()) {
+			throw new MortgageNotFoundException(Constant.MORTGAGE_ACCOUNT_NOT_FOUND);
+		}else {
+			return account.get();
+		}
 	}
 
 }

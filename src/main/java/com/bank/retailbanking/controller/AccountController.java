@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bank.retailbanking.dto.AccountResponseDto;
 import com.bank.retailbanking.entity.Account;
+import com.bank.retailbanking.exception.MortgageNotFoundException;
 import com.bank.retailbanking.service.AccountService;
 
 /**
@@ -68,6 +69,19 @@ public class AccountController {
 		logger.info("fetching Account Summary..");
 		return ResponseEntity.ok().body(accountService.getAccounts(customerId));
 
+	}
+	
+	/**
+	 * This API is used to find mortgageAccount by the customerId
+	 * 
+	 * @pathVariable customerId.This is the customerId of the current customer.
+	 * @return This has the return type of Account.This returns
+	 *         MortgageAccount along
+	 *         with the statusCode.
+	 */
+	@GetMapping(value = "/mortgageaccount/{customerId}")
+	public ResponseEntity<Account> getMortgageAccount(@PathVariable Integer customerId) throws MortgageNotFoundException{
+		return ResponseEntity.ok().body(accountService.getMortgageAccount(customerId));
 	}
 
 }

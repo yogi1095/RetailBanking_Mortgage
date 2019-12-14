@@ -1,7 +1,6 @@
 package com.bank.retailbanking.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +52,6 @@ public class TransactionServiceImpl implements TransactionService {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Override
 	public FundTransferResponseDto fundTransfer(FundTransferRequestDto fundTransferRequestDto) {
-
-		System.out.println(LocalTime.now().getSecond());
 		FundTransferResponseDto fundTransferResponseDto = new FundTransferResponseDto();
 		Optional<Account> fromAccount = accountRepository.findById(fundTransferRequestDto.getFromAccount());
 		Optional<Account> toAccount = accountRepository.findById(fundTransferRequestDto.getToAccount());

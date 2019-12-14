@@ -27,6 +27,8 @@ public class Constant {
 	public static final String ACCOUNT_STATUS_ACTIVE = "Active";
 	public static final String ACCOUNT_TYPE_SAVINGS = "savings";
 	public static final String USER_NOT_FOUND = "user not found";
+	public static final String MORTGAGE = "Mortgage";
+	public static final String MORTGAGE_ACCOUNT_NOT_FOUND = "Mortgage account not found";
 	/**
 	 * Status codes.
 	 */

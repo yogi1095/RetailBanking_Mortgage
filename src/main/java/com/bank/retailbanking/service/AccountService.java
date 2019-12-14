@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bank.retailbanking.dto.AccountResponseDto;
 import com.bank.retailbanking.entity.Account;
+import com.bank.retailbanking.exception.MortgageNotFoundException;
 
 /**
  * This service is having all the methods of the account.
@@ -20,5 +21,7 @@ public interface AccountService {
 	AccountResponseDto getAllAccountNumber(Long accountNumber);
 
 	List<Account> getAccounts(Integer customerId);
+	
+	Account getMortgageAccount(Integer customerId) throws MortgageNotFoundException;
 
 }

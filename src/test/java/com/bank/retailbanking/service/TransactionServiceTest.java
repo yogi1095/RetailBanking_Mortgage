@@ -1,6 +1,7 @@
 package com.bank.retailbanking.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,12 +19,10 @@ import com.bank.retailbanking.constants.Constant;
 import com.bank.retailbanking.dto.FundTransferRequestDto;
 import com.bank.retailbanking.dto.FundTransferResponseDto;
 import com.bank.retailbanking.dto.TransactionRequestDto;
-import com.bank.retailbanking.dto.TransactionResponseDto;
 import com.bank.retailbanking.entity.Account;
 import com.bank.retailbanking.entity.Transaction;
 import com.bank.retailbanking.repository.AccountRepository;
 import com.bank.retailbanking.repository.TransactionRepository;
-import com.bank.retailbanking.service.TransactionServiceImpl;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class TransactionServiceTest {
@@ -107,12 +106,12 @@ public class TransactionServiceTest {
 		fundTransferRequestDto.setTransactionDescription("testing");
 		Account account = new Account();
 		account.setBalance(200.0);
-		
+
 		Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 		Mockito.when(accountRepository.findById(2L)).thenReturn(Optional.of(account));
 		actual = transactionService.fundTransfer(fundTransferRequestDto);
 		assertEquals(Constant.INVALID_AMOUNT, actual.getStatusCode());
-		
+
 		fundTransferRequestDto.setTransactionAmount(500.0);
 		Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 		Mockito.when(accountRepository.findById(2L)).thenReturn(Optional.of(account));
@@ -134,7 +133,7 @@ public class TransactionServiceTest {
 		Account account = new Account();
 		account.setAccountNumber(1L);
 		List<Transaction> transactions = new ArrayList<>();
-		
+
 		Transaction transaction = new Transaction();
 		transaction.setTransactionType("debit");
 		transaction.setTransactionDate(LocalDate.now());
@@ -142,14 +141,12 @@ public class TransactionServiceTest {
 		transaction.setTransactionAmount(300.0);
 		transaction.setAccount(account);
 		transactions.add(transaction);
-		
-		Mockito.when(transactionRepository.getAllByAccountAndTransactionDateBetween(Mockito.any() , Mockito.any(),Mockito.any())).thenReturn(transactions);
-		TransactionResponseDto actual = transactionService.monthlyTransactions(transactionRequestDto);
-		TransactionResponseDto expected = new TransactionResponseDto();
-		expected.setStatuscode(Constant.ACCEPTED);
-		assertEquals(expected.getStatuscode(), actual.getStatuscode());
-	
-		
+
+		Mockito.when(transactionRepository.getAllByAccountAndTransactionDateBetween(Mockito.any(), Mockito.any(),
+				Mockito.any())).thenReturn(transactions);
+		List<Transaction> actual = transactionService.getTransactions(transactionRequestDto);
+		assertNotNull(actual);
+
 	}
 
 }
