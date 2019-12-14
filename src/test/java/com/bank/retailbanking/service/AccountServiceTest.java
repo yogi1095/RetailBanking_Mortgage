@@ -49,6 +49,32 @@ public class AccountServiceTest {
 	Transaction transaction = null;
 	List<Transaction> transactionsList = new ArrayList<>();
 
+	@Test
+	public void testGetMortgageAccountPositive() throws MortgageNotFoundException {
+		
+		customer = new Customer();
+		customer.setCustomerId(1);
+		customer.setAddress("Bng");
+		customer.setDateOfBirth(LocalDate.parse("1996-12-03"));
+		customer.setEmailId("yoga@gmail.com");
+		customer.setFirstName("yoga");
+		customer.setLastName("reddy");
+		customer.setMobileNo(9491777925L);
+		customer.setUserName("HI");
+		customer.setPassword("Hello");
+		
+		account = new Account();
+		account.setAccountNumber(60987652L);
+		account.setAccountStatus("open");
+		account.setAccountType(Constant.MORTGAGE);
+		account.setBalance((double) 3489);
+		account.setCustomer(customer);
+		
+		Mockito.when(accountRepository.findByCustomerAndAccountType(Mockito.any(),Mockito.any())).thenReturn(Optional.of(new Account()));
+		Account account =accountServiceImpl.getMortgageAccount(1);
+		assertNotNull(account);
+	}
+	
 	@Before
 	public void setup() {
 
@@ -111,6 +137,8 @@ public class AccountServiceTest {
 		List<Account> accountSummaryResponseDto = accountServiceImpl.getAccounts(5);
 		Assert.assertNotNull(accountSummaryResponseDto);
 	}
+	
+
 	
 	@Test(expected = MortgageNotFoundException.class)
 	public void testGetMortgageAccount() throws MortgageNotFoundException {

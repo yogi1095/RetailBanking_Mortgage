@@ -66,7 +66,6 @@ public class CustomerControllerTest {
 
 	@Test
 	public void testRegisterCustomerFailure() throws UserNameAlreadyExistException, EmailAlreadyExistException {
-
 		CustomerRequestDto customerRequestDto = new CustomerRequestDto();
 		customerRequestDto.setFirstName("Nivi");
 		customerRequestDto.setLastName("R");
@@ -77,7 +76,6 @@ public class CustomerControllerTest {
 		customerRequestDto.setDateOfBirth(LocalDate.now());
 		CustomerResponseDto customerResponseDto = new CustomerResponseDto();
 		customerResponseDto.setStatusCode(HttpStatus.NOT_ACCEPTABLE.value());
-
 		Mockito.when(customerService.registerCustomer(customerRequestDto)).thenReturn(customerResponseDto);
 		int result = customerController.registerCustomer(customerRequestDto).getStatusCode();
 		assertEquals(HttpStatus.NOT_ACCEPTABLE.value(), result);
