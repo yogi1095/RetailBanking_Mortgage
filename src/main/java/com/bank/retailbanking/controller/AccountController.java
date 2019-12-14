@@ -9,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bank.retailbanking.dto.AccountRequestDto;
 import com.bank.retailbanking.dto.AccountResponseDto;
 import com.bank.retailbanking.entity.Account;
 import com.bank.retailbanking.service.AccountService;
@@ -68,6 +71,25 @@ public class AccountController {
 		logger.info("fetching Account Summary..");
 		return ResponseEntity.ok().body(accountService.getAccounts(customerId));
 
+	}
+	/**
+	 * This API is used to find accountSummary which will find last five
+	 * transactions and account number and name
+	 * 
+	 * @pathVariable customerId.This is the customerId of the current customer.
+	 * @return This has the return type of AccountSummaryResponseDto.This returns
+	 *         last five transactions and accountNumbers and String of result along
+	 *         with the statusCode.
+	 */
+	
+	@PostMapping
+	public ResponseEntity<Account> createAccount(@RequestBody AccountRequestDto accountRequestDto){
+		return ResponseEntity.ok().body(accountService.createAccount(accountRequestDto));
+	}
+	
+	@GetMapping(value = "/search/{accountNumber}")
+	public ResponseEntity<List<Account>> searchAccount(@PathVariable("accountNumber") Long accountNumber){
+		return ResponseEntity.ok().body(accountService.searchAccounts(accountNumber));
 	}
 
 }

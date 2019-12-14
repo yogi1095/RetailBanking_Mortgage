@@ -2,6 +2,7 @@ package com.bank.retailbanking.service;
 
 import java.util.List;
 
+import com.bank.retailbanking.dto.AccountRequestDto;
 import com.bank.retailbanking.dto.AccountResponseDto;
 import com.bank.retailbanking.entity.Account;
 
@@ -20,5 +21,9 @@ public interface AccountService {
 	AccountResponseDto getAllAccountNumber(Long accountNumber);
 
 	List<Account> getAccounts(Integer customerId);
+
+	Account createAccount(AccountRequestDto accountRequestDto);
+
+	List<Account> searchAccounts(Long accountNumber);
 
 }

@@ -3,13 +3,16 @@ package com.bank.retailbanking.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bank.retailbanking.constants.Constant;
+import com.bank.retailbanking.dto.AccountRequestDto;
 import com.bank.retailbanking.dto.AccountResponseDto;
 import com.bank.retailbanking.dto.TransferAccountDto;
 import com.bank.retailbanking.entity.Account;
@@ -89,6 +92,34 @@ public class AccountServiceImpl implements AccountService {
 		Customer customer = new Customer();
 		customer.setCustomerId(customerId);
 		return accountRepository.findByCustomer(customer);
+	}
+
+	/**
+	 * This API is used to create account
+	 * 
+	 * @pathVariable customerId.This is the customerId of the customer.
+	 * @return This has the return type of AccountSummaryResponseDto.This returns
+	 *         accountSummary and String of result along with the statusCode.
+	 */
+	@Override
+	public Account createAccount(AccountRequestDto accountRequestDto) {
+		Account account = new Account();
+		Optional<Customer> customer = customerRepository.findById(accountRequestDto.getCustomerId());
+		account.setCustomer(customer.get());
+		account.setBalance(accountRequestDto.getBalance());
+		account.setAccountType(Constant.ACCOUNT_TYPE);
+		account.setAccountStatus(Constant.ACCOUNT_STATUS_ACTIVE);
+		accountRepository.save(account);
+		return account;
+	}
+
+	@Override
+	public List<Account> searchAccounts(Long accountNumber) {
+		List<Account> accounts = accountRepository.findAll();
+		accounts = accounts.stream().filter(
+				account -> account.getAccountNumber().toString().contains(accountNumber.toString()))
+				.collect(Collectors.toList());
+		return accounts;
 	}
 
 }
